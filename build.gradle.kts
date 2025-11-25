@@ -32,6 +32,12 @@ dependencies {
 	providedRuntime("org.springframework.boot:spring-boot-starter-tomcat-runtime")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	
+	// --- JPA 추가 ---
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+    // --- DB 드라이버 추가  ---
+    runtimeOnly("com.mysql:mysql-connector-j")
 }
 
 tasks.withType<Test> {
