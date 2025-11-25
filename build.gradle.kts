@@ -26,12 +26,18 @@ repositories {
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-webmvc")
+	implementation("org.springframework.boot:spring-boot-starter-web")
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
 	providedRuntime("org.springframework.boot:spring-boot-starter-tomcat-runtime")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    //WebClient(gemini api 요청용)
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
+
+    //gson
+    implementation("com.google.code.gson:gson:2.11.0")
 }
 
 tasks.withType<Test> {
