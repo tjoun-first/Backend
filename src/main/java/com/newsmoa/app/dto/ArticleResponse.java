@@ -1,5 +1,6 @@
 package com.newsmoa.app.dto;
 
+import com.newsmoa.app.domain.Article;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,4 +16,17 @@ public class ArticleResponse {
     private String content;
     private String simplified;
     private String summary;
+    
+    public static ArticleResponse from(Article article){
+        ArticleResponse articleResponse = new ArticleResponse();
+        articleResponse.setArticleId(article.getArticleId());
+        articleResponse.setCategory(article.getCategory());
+        articleResponse.setDate(article.getDate());
+        articleResponse.setUrl(article.getUrl());
+        articleResponse.setTitle(article.getTitle());
+        articleResponse.setContent(article.getContent());
+        articleResponse.setSimplified(article.getSimplifiedContent());
+        articleResponse.setSummary(article.getSummaryContent());
+        return articleResponse;
+    }
 }
