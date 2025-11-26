@@ -2,7 +2,8 @@ package com.newsmoa.app.controller;
 
 import com.newsmoa.app.dto.ArticleResponse;
 import com.newsmoa.app.service.ArticleService;
-import com.newsmoa.app.util.Utils;
+import com.newsmoa.app.util.AiUtil;
+import com.newsmoa.app.util.DummyUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +17,9 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "*", allowedHeaders = "*") 
 public class ArticleController {
     private final ArticleService articleService;
-    private final Utils utils;
     
     @Autowired
-    public ArticleController(Utils utils, ArticleService articleService) {
-        this.utils = utils;
+    public ArticleController(ArticleService articleService) {
         this.articleService = articleService;
     }
 
@@ -40,7 +39,7 @@ public class ArticleController {
     @Operation(summary = "기사 세부정보 조회", description = "요청한 article_id의 기사 요약(summary) 및 해석본(simplified) 정보를 반환합니다.")
     @GetMapping("/simplified/{article_id}")
     public ResponseEntity<List<ArticleResponse>> getArticle(@PathVariable("article_id") Long article_id){
-        ArticleResponse article = utils.getDummyArticle();
+        ArticleResponse article = DummyUtil.getDummyArticle();
         article.setContent(null);
         return ResponseEntity.ok().body(List.of(article));
     }
@@ -49,7 +48,7 @@ public class ArticleController {
     @Operation(summary = "기사 원문 조회", description = "요청한 article_id의 기사 원문(content)을 문자열로 반환합니다.")
     @GetMapping("/original/{article_id}")
     public ResponseEntity<String> getOriginalArticle(@PathVariable("article_id") Long article_id){
-        ArticleResponse article = utils.getDummyArticle();
+        ArticleResponse article = DummyUtil.getDummyArticle();
         return ResponseEntity.ok().body(article.getContent());
     }
 }
