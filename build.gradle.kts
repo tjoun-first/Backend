@@ -34,7 +34,7 @@ dependencies {
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     //WebClient(gemini api 요청용)
-    implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("org.springframework:spring-webflux")
 
     //gson
     implementation("com.google.code.gson:gson:2.11.0")
@@ -44,6 +44,9 @@ dependencies {
 
     // --- DB 드라이버 추가  ---
     runtimeOnly("com.mysql:mysql-connector-j")
+    
+    //open api doc
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 }
 
 tasks.withType<Test> {

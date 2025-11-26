@@ -13,7 +13,7 @@ paths:
   /login:
     post:
       summary: 1. 로그인 API
-      description: 입력한 ID와 PW로 로그인합니다. 성공 시 true, 실패 시 false를 반환합니다.
+      description: 입력한 ID와 PW로 로그인합니다.
       operationId: loginUser
       requestBody:
         required: true
@@ -109,7 +109,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/Article'
 
-  /article/{article_id}:
+  /article/simpilfied/{article_id}:
     get:
       summary: 3. 기사 세부정보 조회
       description: 요청한 article_id의 기사 요약(summary) 및 해석본(simplified) 정보를 반환합니다.
@@ -133,7 +133,7 @@ paths:
         '400':
           description: 잘못된 article_id 입력
 
-  /article/{article_id}/original:
+  /article/original/{article_id}:
     get:
       summary: 4. 기사 원문 조회
       description: 요청한 article_id의 기사 원문(content)을 문자열로 반환합니다.
