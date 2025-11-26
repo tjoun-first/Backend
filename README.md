@@ -1,6 +1,6 @@
-# 📘 NewsMoa Backend Server
+# 📘 NewsMoa Backend API 문서
 
-본 문서는 News Backend 서비스의 API 사양을 설명합니다.\
+본 문서는 NewsMoa Backend 서비스의 API 사양을 설명합니다.
 모든 API URL은 `/api` 를 기본 prefix로 사용합니다.
 
 ------------------------------------------------------------------------
@@ -41,9 +41,9 @@ false
 입력한 `category`에 해당하는 기사들의 **title, id** 목록을 반환합니다.
 
 #### Path Parameter
-| 이름       | 타입     | 설명      |
-| -------- | ------ | ------- |
-| category | String | 기사 카테고리 |
+| 이름       | 타입     | 설명                                   |
+| -------- | ------ | ------------------------------------ |
+| category | String | 한글로 된 기사 카테고리 이름(경제, 과학, 사회, 역사, 환경) |
 
 
 #### 응답 예제
@@ -108,15 +108,15 @@ false
 
 ## 🧾 4. 기사 원문 조회
 
-### **GET /api/article/{article_id}/rewrite**
+### **GET /api/article/{article_id}/original
 
-요청한 `article_id`의 기사 **원문(content)** 을 반환합니다.
+요청한 `article_id`의 기사 **원문(content)** 을 문자열로 반환합니다.
 
 #### Path Parameter
 
-| 이름        | 타입 | 설명           |
-|-------------|------|----------------|
-| article_id  | int  | 조회할 기사 ID |
+| 이름         | 타입  | 설명        |
+| ---------- | --- | --------- |
+| article_id | int | 조회할 기사 ID |
 
 
 #### 응답 예제
@@ -131,7 +131,7 @@ false
 ### **GET /api/mypage/scraped**
 
 요청한 유저가 **스크랩한 기사 리스트**를 반환합니다.
-로그인 유저 정보는 인증 토큰 또는 세션에서 식별한다고 가정합니다.
+로그인 유저 정보는 세션에서 식별합니다.
 
 #### 응답 예제
 
