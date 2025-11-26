@@ -53,8 +53,4 @@ public class Article {
 	@Column(name = "summary_content", length = 1000)
 	private String summaryContent; // varchar(1000)
 
-	// YourArticle과의 1:N 관계 (Article이 1, YourArticle이 N)
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<YourArticle> yourArticles = new ArrayList<>();
-
 }
