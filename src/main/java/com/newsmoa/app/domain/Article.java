@@ -35,7 +35,7 @@ public class Article {
 	@Column(name = "date", nullable = false)
 	private LocalDate date; // DATE
 
-	@Column(name = "url", length = 50, nullable = false)
+	@Column(name = "url", length = 100, nullable = false)
 	private String url; // varchar(50)
 
 	@Column(name = "title", length = 100, nullable = false)
@@ -52,9 +52,5 @@ public class Article {
 	@Lob
 	@Column(name = "summary_content", length = 1000)
 	private String summaryContent; // varchar(1000)
-
-	// YourArticle과의 1:N 관계 (Article이 1, YourArticle이 N)
-	@OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<YourArticle> yourArticles = new ArrayList<>();
 
 }
