@@ -1,7 +1,6 @@
 package com.newsmoa.app.dto;
 
 import com.newsmoa.app.domain.Article;
-import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
