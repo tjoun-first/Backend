@@ -1,0 +1,60 @@
+package com.newsmoa.app.domain;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@Entity
+@Table(name = "article")
+public class Article {
+
+	// PK: article_id. Long 타입이 일반적으로 ID로 많이 사용됨
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // DB가 ID를 자동 생성하도록 설정
+	@Column(name = "article_id", nullable = false)
+	private Long articleId; // NUMBER
+
+	@Column(name = "category", length = 20, nullable = false)
+	private String category; // varchar(20)
+
+	// DATE 타입은 Java 8의 LocalDate로 매핑하는 것이 일반적입니다.
+	@Column(name = "date", nullable = false)
+	private LocalDate date; // DATE
+
+	@Column(name = "url", length = 50, nullable = false)
+	private String url; // varchar(50)
+
+	@Column(name = "title", length = 100, nullable = false)
+	private String title; // varchar(100)
+
+	@Lob
+	@Column(name = "content", length = 1000)
+	private String content; // varchar(1000)
+
+	@Lob
+	@Column(name = "simplified_content", length = 1000)
+	private String simplifiedContent; // varchar(1000)
+
+	@Lob
+	@Column(name = "summary_content", length = 1000)
+	private String summaryContent; // varchar(1000)
+
+	// YourArticle과의 1:N 관계 (Article이 1, YourArticle이 N)
+	@OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<YourArticle> yourArticles = new ArrayList<>();
+
+}

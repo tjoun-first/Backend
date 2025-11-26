@@ -26,7 +26,7 @@ repositories {
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-webmvc")
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
 	providedRuntime("org.springframework.boot:spring-boot-starter-tomcat-runtime")
@@ -38,6 +38,12 @@ dependencies {
 
     //gson
     implementation("com.google.code.gson:gson:2.11.0")
+	
+	// --- JPA 추가 ---
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+    // --- DB 드라이버 추가  ---
+    runtimeOnly("com.mysql:mysql-connector-j")
 }
 
 tasks.withType<Test> {
