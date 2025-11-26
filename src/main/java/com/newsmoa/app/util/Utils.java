@@ -1,11 +1,14 @@
 package com.newsmoa.app.util;
 
 import com.google.gson.JsonParser;
+import com.newsmoa.app.dto.ArticleResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.time.LocalDate;
 
 @Slf4j
 @Component
@@ -21,6 +24,8 @@ public class Utils {
                 .defaultHeader("X-goog-api-key", API_KEY)
                 .build();
     }
+
+//-----------------------public 메소드-----------------------------------------------
     
     public String queryGemini(String prompt){
         String jsonBody = String.format(
@@ -37,6 +42,21 @@ public class Utils {
 
         return getTextFromResponse(response);
     }
+    
+    public ArticleResponse getDummyArticle(){
+        ArticleResponse article = new ArticleResponse();
+        article.setArticleId(0L);
+        article.setCategory("정치");
+        article.setDate(LocalDate.now());
+        article.setUrl("/");
+        article.setTitle("Dummy Article");
+        article.setContent("Dummy Content");
+        article.setSimplified("Dummy Simplified");
+        article.setSummary("Dummy Summary");
+        return article;
+    }
+    
+//-----------------------private 메소드-----------------------------------------------
     private String getTextFromResponse(String response){
         if(response == null) {
             return null;
