@@ -35,7 +35,7 @@ public class Article {
 	@Column(name = "date", nullable = false)
 	private LocalDate date; // DATE
 
-	@Column(name = "url", length = 50, nullable = false)
+	@Column(name = "url", length = 100, nullable = false)
 	private String url; // varchar(50)
 
 	@Column(name = "title", length = 100, nullable = false)

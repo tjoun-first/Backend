@@ -15,4 +15,8 @@ public class ArticleService {
     public List<Article> findArticlesByCategory(String category) {
         return articleRepository.findByCategory(category);
     }
+
+    public java.util.Optional<Article> findArticleById(Long articleId) {
+        return articleRepository.findById(articleId);
+    }
 }
