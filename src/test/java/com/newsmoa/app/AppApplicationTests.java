@@ -1,5 +1,6 @@
 package com.newsmoa.app;
 
+import com.newsmoa.app.domain.Article;
 import com.newsmoa.app.util.AiUtil;
 import com.newsmoa.app.util.CrawlingUtil;
 import org.junit.jupiter.api.Disabled;
@@ -9,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.List;
+import java.util.Set;
 
 //전체 스프링 컨텍스트를 올려서 테스트
 //@SpringBootTest
@@ -35,6 +39,12 @@ class AppApplicationTests {
     @Test
     void testCrowl(){
         System.out.println("크롤링 테스트 시작");
-        System.out.println(CrawlingUtil.getNewsUrls(CrawlingUtil.URL_SCIENCE));
+        Set<String> urls = CrawlingUtil.getNewsUrls("과학");
+        for (String url : urls) {
+            Article article = new Article();
+            article.setUrl(url);
+            System.out.printf("url: %s에 대해 크롤링 시작\n", url);
+            System.out.println(CrawlingUtil.getArticle(article));
+        }
     }
 }
