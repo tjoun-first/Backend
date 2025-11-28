@@ -22,8 +22,7 @@ public class MypageController {
     private final MypageService mypageService;
 
     @GetMapping("/scraped")
-    public ResponseEntity<List<ArticleResponse>> scraped(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public ResponseEntity<List<ArticleResponse>> scraped(Authentication authentication){
         String userId = authentication.getName();
 
         List<Article> articles = mypageService.getScrapedArticlesByUserId(userId);
@@ -36,8 +35,7 @@ public class MypageController {
     }
     
     @GetMapping("/recent")
-    public ResponseEntity<List<ArticleResponse>> recent(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public ResponseEntity<List<ArticleResponse>> recent(Authentication authentication){
         String userId = authentication.getName();
 
         List<Article> articles = mypageService.getRecentArticlesByUserId(userId);
