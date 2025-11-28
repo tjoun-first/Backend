@@ -47,6 +47,9 @@ dependencies {
     
     //open api doc
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
+    
+    //jsoup
+    implementation("org.jsoup:jsoup:1.17.2")
 }
 
 tasks.withType<Test> {
