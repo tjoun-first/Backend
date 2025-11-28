@@ -31,6 +31,7 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 	providedRuntime("org.springframework.boot:spring-boot-starter-tomcat-runtime")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.springframework.security:spring-security-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     //WebClient(gemini api 요청용)
@@ -44,6 +45,9 @@ dependencies {
 
     // --- DB 드라이버 추가  ---
     runtimeOnly("com.mysql:mysql-connector-j")
+    
+    // --- Spring Security 기본 의존성 추가 ---
+    implementation("org.springframework.boot:spring-boot-starter-security")
 }
 
 tasks.withType<Test> {
