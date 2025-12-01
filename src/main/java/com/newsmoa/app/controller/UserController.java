@@ -2,6 +2,7 @@ package com.newsmoa.app.controller;
 
 import com.newsmoa.app.dto.UserRequest;
 import com.newsmoa.app.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
@@ -30,17 +28,8 @@ public class UserController {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
     }
-
-    @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody UserRequest userRequest) {
-        try {
-            userService.signup(userRequest);
-            return ResponseEntity.status(HttpStatus.CREATED).body("회원가입이 성공적으로 완료되었습니다.");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
-
+    
+    @Operation(summary = "로그인 API", description = "입력한 ID와 PW로 로그인합니다.")
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserRequest userRequest, HttpServletRequest request) {
         try {
@@ -58,11 +47,23 @@ public class UserController {
                     HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
                     securityContext
             );
-            
+
             return ResponseEntity.ok("로그인 성공");
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 실패: 아이디 또는 비밀번호가 잘못되었습니다.");
         }
+    }
+
+    @Operation(summary = "회원가입", description = "신규 사용자를 등록합니다.")
+    @PostMapping("users")
+    public ResponseEntity<Object> users(@RequestBody UserRequest user){
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @Operation(summary = "아이디 중복 체크", description = "입력한 로그인 아이디의 중복 여부를 확인합니다.")
+    @GetMapping("users/exists")
+    public ResponseEntity<Object> userExists(@RequestParam String id){
+        return ResponseEntity.ok().build();
     }
 }
