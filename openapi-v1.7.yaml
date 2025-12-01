@@ -4,7 +4,7 @@ info:
   description: |
     NewsMoa Backend 서비스의 API 명세서입니다.
     기사 조회, 로그인, 마이페이지 기능을 제공합니다.
-  version: 1.6.1
+  version: 1.7.0
 servers:
   - url: /api
     description: 기본 API 서버
@@ -109,10 +109,10 @@ paths:
                 items:
                   $ref: '#/components/schemas/Article'
 
-  /article/simpilfied/{article_id}:
+  /article/id/{article_id}:
     get:
       summary: 기사 세부정보 조회
-      description: 요청한 article_id의 기사 요약(summary) 및 해석본(simplified) 정보를 반환합니다.
+      description: 요청한 article_id의 모든 상세 정보를 반환합니다.
       tags:
         - Article
       operationId: getArticleDetail
@@ -130,31 +130,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Article'
-        '400':
-          description: 잘못된 article_id 입력
-
-  /article/original/{article_id}:
-    get:
-      summary: 기사 원문 조회
-      description: 요청한 article_id의 기사 원문(content)을 문자열로 반환합니다.
-      tags:
-        - Article
-      operationId: getArticleOriginal
-      parameters:
-        - name: article_id
-          in: path
-          description: 조회할 기사 ID
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: 기사 원문 텍스트 반환
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: "정부는 오늘 새로운 정책을 발표했다. 해당 정책은 ..."
         '400':
           description: 잘못된 article_id 입력
 
