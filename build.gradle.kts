@@ -31,11 +31,10 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 	providedRuntime("org.springframework.boot:spring-boot-starter-tomcat-runtime")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("org.springframework.security:spring-security-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     //WebClient(gemini api 요청용)
-    implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("org.springframework:spring-webflux")
 
     //gson
     implementation("com.google.code.gson:gson:2.11.0")
@@ -48,6 +47,12 @@ dependencies {
     
     // --- Spring Security 기본 의존성 추가 ---
     implementation("org.springframework.boot:spring-boot-starter-security")
+    
+    //open api doc
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
+    
+    //jsoup
+    implementation("org.jsoup:jsoup:1.17.2")
 }
 
 tasks.withType<Test> {

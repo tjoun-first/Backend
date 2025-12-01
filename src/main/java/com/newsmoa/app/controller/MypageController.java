@@ -21,6 +21,8 @@ public class MypageController {
 
     private final MypageService mypageService;
 
+
+    @Operation(summary = "마이페이지 - 스크랩한 기사 목록", description = "요청한 유저가 스크랩한 기사 리스트를 반환합니다. (세션 기반 인증)") 
     @GetMapping("/scraped")
     public ResponseEntity<List<ArticleResponse>> scraped(Authentication authentication){
         String userId = authentication.getName();
@@ -33,7 +35,8 @@ public class MypageController {
 
         return ResponseEntity.ok().body(response);
     }
-    
+
+    @Operation(summary = "마이페이지 - 최근 본 기사 목록", description = "요청한 유저가 최근에 본 기사 리스트를 반환합니다. (세션 기반 인증)")
     @GetMapping("/recent")
     public ResponseEntity<List<ArticleResponse>> recent(Authentication authentication){
         String userId = authentication.getName();

@@ -1,22 +1,19 @@
 package com.newsmoa.app.util;
 
 import com.google.gson.JsonParser;
-import com.newsmoa.app.dto.ArticleResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.time.LocalDate;
-
 @Slf4j
 @Component
-public class Utils {
+public class AiUtil {
     private final String API_KEY;
     private final WebClient client;
 
-    public Utils (@Value("${gemini-api-key}") String apiKey) {
+    public AiUtil(@Value("${gemini-api-key}") String apiKey) {
         API_KEY = apiKey;
         client = WebClient.builder()
                 .baseUrl("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent")
@@ -41,19 +38,6 @@ public class Utils {
                 .block(); // 동기 호출
 
         return getTextFromResponse(response);
-    }
-    
-    public ArticleResponse getDummyArticle(){
-        ArticleResponse article = new ArticleResponse();
-        article.setArticleId(0L);
-        article.setCategory("정치");
-        article.setDate(LocalDate.now());
-        article.setUrl("/");
-        article.setTitle("Dummy Article");
-        article.setContent("Dummy Content");
-        article.setSimplified("Dummy Simplified");
-        article.setSummary("Dummy Summary");
-        return article;
     }
     
 //-----------------------private 메소드-----------------------------------------------
