@@ -3,6 +3,7 @@ package com.newsmoa.app.controller;
 import com.newsmoa.app.domain.Article;
 import com.newsmoa.app.dto.ArticleResponse;
 import com.newsmoa.app.service.MypageService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
