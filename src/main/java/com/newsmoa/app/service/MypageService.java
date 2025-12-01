@@ -3,6 +3,7 @@ package com.newsmoa.app.service;
 import com.newsmoa.app.domain.Article;
 import com.newsmoa.app.domain.User;
 import com.newsmoa.app.domain.YourArticle;
+import com.newsmoa.app.repository.ArticleRepository;
 import com.newsmoa.app.repository.MypageRepository;
 import com.newsmoa.app.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class MypageService {
 
     private final MypageRepository mypageRepository;
     private final UserRepository userRepository;
+    private final ArticleRepository articleRepository;
 
     public List<Article> getScrapedArticlesByUserId(String userId) {
         User user = userRepository.findById(userId)
@@ -40,5 +42,23 @@ public class MypageService {
         return recentEntries.stream()
                 .map(YourArticle::getArticle)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void saveRecentArticle(String userId, Long articleId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(() -> new IllegalArgumentException("Article not found with id: " + articleId));
+
+        // Check if the "recent" article entry already exists for this user and article
+        mypageRepository.findByUserAndArticleAndType(user, article, "recent").ifPresent(mypageRepository::delete);
+
+        YourArticle yourArticle = new YourArticle();
+        yourArticle.setUser(user);
+        yourArticle.setArticle(article);
+        yourArticle.setType("recent");
+
+        mypageRepository.save(yourArticle);
     }
 }
