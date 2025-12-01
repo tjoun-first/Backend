@@ -1,6 +1,5 @@
 package com.newsmoa.app.service;
 
-import com.newsmoa.app.domain.Article;
 import com.newsmoa.app.domain.User;
 import com.newsmoa.app.domain.YourArticle;
 import com.newsmoa.app.dto.ArticleResponse;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
