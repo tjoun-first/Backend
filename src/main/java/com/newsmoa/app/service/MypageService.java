@@ -61,4 +61,33 @@ public class MypageService {
 
         mypageRepository.save(yourArticle);
     }
+
+    @Transactional
+    public void saveScrapedArticle(String userId, Long articleId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(() -> new IllegalArgumentException("Article not found with id: " + articleId));
+
+        // Check if the "scraped" article entry already exists for this user and article
+        mypageRepository.findByUserAndArticleAndType(user, article, "scraped").ifPresent(mypageRepository::delete);
+
+        YourArticle yourArticle = new YourArticle();
+        yourArticle.setUser(user);
+        yourArticle.setArticle(article);
+        yourArticle.setType("scraped");
+
+        mypageRepository.save(yourArticle);
+    }
+
+    @Transactional
+    public void deleteScrapedArticle(String userId, Long articleId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(() -> new IllegalArgumentException("Article not found with id: " + articleId));
+
+        mypageRepository.findByUserAndArticleAndType(user, article, "scraped")
+                .ifPresent(mypageRepository::delete);
+    }
 }
