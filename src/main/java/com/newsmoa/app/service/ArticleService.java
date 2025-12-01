@@ -1,6 +1,7 @@
 package com.newsmoa.app.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,13 +23,20 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final List<String> categories = List.of( "경제", "과학", "사회", "세계", "문화" );
 
-    // 기존 메서드
-    public List<Article> findArticlesByCategory(String category) {
-        return articleRepository.findByCategory(category);
+ // 1. 목록 조회 
+    public List<ArticleResponse> getArticlesByCategory(String category) {
+        return articleRepository.findByCategory(category).stream()
+                .map(ArticleResponse::new)
+                .collect(Collectors.toList());
     }
-
-    public java.util.Optional<Article> findArticleById(Long articleId) {
-        return articleRepository.findById(articleId);
+    
+ // 2. 단건 조회(상세 조회) ->  ID로 바로 DTO 가져오기
+    public ArticleResponse getArticleResponseById(Long articleId) {
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Article not found with id: " + articleId));
+     
+        return new ArticleResponse(article);
     }
     
     public void refreshArticle() {
@@ -44,13 +52,7 @@ public class ArticleService {
         return new ArticleResponse(article);  // 생성자 활용
     }
 
-    // ID로 바로 DTO 가져오기
-    public ArticleResponse getArticleResponseById(Long articleId) {
-        Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Article not found with id: " + articleId));
-        return new ArticleResponse(article);
-    }
+    
 
 }
 
