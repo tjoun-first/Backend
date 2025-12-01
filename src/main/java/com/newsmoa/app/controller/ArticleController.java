@@ -30,17 +30,10 @@ import lombok.RequiredArgsConstructor;
         }
 
         // 기사 요약문+해석문 조회 
-        @GetMapping("/simplified/{article_id}")
-        public ResponseEntity<ArticleResponse> getSimplifiedArticle(@PathVariable("article_id") Long article_id) {
+        @GetMapping("/id/{article_id}")
+        public ResponseEntity<ArticleResponse> getArticle(@PathVariable("article_id") Long article_id) {
             ArticleResponse response = articleService.getArticleResponseById(article_id);
             return ResponseEntity.ok(response);
-        }
-
-        // 기사 원문 조회 
-        @GetMapping("/original/{article_id}")
-        public ResponseEntity<String> getOriginalArticle(@PathVariable("article_id") Long article_id) {
-            String content = articleService.getOriginalContentById(article_id);
-            return ResponseEntity.ok(content);
         }
     }
 

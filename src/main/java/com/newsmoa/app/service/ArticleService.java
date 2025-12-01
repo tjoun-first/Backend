@@ -20,7 +20,7 @@ public class ArticleService {
 
     private final ArticleRepository articleRepository;
 
-    // 기존 메서드 (그대로 두되, 나중에 DTO로 바꾸는 걸 추천)
+    // 기존 메서드
     public List<Article> findArticlesByCategory(String category) {
         return articleRepository.findByCategory(category);
     }
@@ -29,12 +29,12 @@ public class ArticleService {
         return articleRepository.findById(articleId);
     }
 
-    // 신규 추가: 엔티티 → DTO 변환 전용 메서드 (핵심!)
+    // 엔티티 → DTO 변환 전용 메서드
     public ArticleResponse toResponse(Article article) {
-        return new ArticleResponse(article);  // 당신이 만든 생성자 활용
+        return new ArticleResponse(article);  // 생성자 활용
     }
 
-    // 신규 추가: ID로 바로 DTO 가져오기 (가장 깔끔한 방법)
+    // ID로 바로 DTO 가져오기
     public ArticleResponse getArticleResponseById(Long articleId) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new ResponseStatusException(
@@ -42,12 +42,5 @@ public class ArticleService {
         return new ArticleResponse(article);
     }
 
-    // 신규 추가: 원문 content만 빠르게 가져오기
-    public String getOriginalContentById(Long articleId) {
-        return articleRepository.findById(articleId)
-                .map(Article::getContent)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Article not found with id: " + articleId));
-    }
 }
 

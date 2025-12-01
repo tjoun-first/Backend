@@ -21,7 +21,7 @@ public class ArticleResponse {
 	private String simplified;
 	private String summary;
 
-	// Article 객체를 받아서 DTO로 변환하는 생성자 추가
+	// Article 객체를 받아서 DTO로 변환하는 생성자
     public ArticleResponse(Article article) {
         this.articleId = article.getArticleId();
         this.category = article.getCategory();
