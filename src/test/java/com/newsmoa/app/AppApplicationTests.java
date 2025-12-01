@@ -39,12 +39,9 @@ class AppApplicationTests {
     @Test
     void testCrowl(){
         System.out.println("크롤링 테스트 시작");
-        Set<String> urls = CrawlingUtil.getNewsUrls("과학");
-        for (String url : urls) {
-            Article article = new Article();
-            article.setUrl(url);
-            System.out.printf("url: %s에 대해 크롤링 시작\n", url);
-            System.out.println(CrawlingUtil.getArticle(article));
+        List<Article> articles = CrawlingUtil.crawlArticles("과학");
+        for (Article article : articles) {
+            System.out.println(article);
         }
     }
 }

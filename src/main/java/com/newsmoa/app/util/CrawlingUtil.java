@@ -8,6 +8,8 @@ import org.jsoup.select.NodeFilter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -42,7 +44,7 @@ public class CrawlingUtil {
      * 7. url을 필터링 해 기사 url만 추출
      * 8. 스트림을 리스트로 변환하여 리턴
     * */
-    public static Set<String> getNewsUrls(String category){
+    private static Set<String> getNewsUrls(String category){
         try {
             Set<String> urlList = Jsoup.connect(URLS.get(category)).get()
                     .body()
@@ -67,8 +69,12 @@ public class CrawlingUtil {
             return null;
         }
     }
-    
-    public static Article getArticle(Article article){
+
+    /** 뉴스기사 url을 이용해 뉴스기사 본문을 크롤링합니다.
+     * @param article 카테고리명(한글로 작성)
+     * @return 해당 카테고리의 기사 url 리스트
+     * */
+    private static Article getArticleDetail(Article article){
         try {            
             Element doc = Jsoup.connect(article.getUrl()).get().body();
             String title = doc.getElementById("title_area").child(0).text();
@@ -81,10 +87,21 @@ public class CrawlingUtil {
             String content = doc.getElementById("dic_area").text();
             article.setContent(content);
             
-//            System.out.printf("date:%s\ntitle: %s\ncontent: %s\n", date, title, content); //테스트 출력
             return article;
         } catch (IOException e) {
             return null;
         }
+    }
+    
+    public static List<Article> crawlArticles(String category){
+        List<Article> articles = new ArrayList<>();
+        for(String url : getNewsUrls(category)){
+            Article article = new Article();
+            article.setUrl(url);
+            article.setCategory(category);
+            article = getArticleDetail(article);
+            articles.add(article);
+        }
+        return articles;
     }
 }
