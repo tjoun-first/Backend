@@ -3,6 +3,7 @@ package com.newsmoa.app.service;
 import com.newsmoa.app.domain.Article;
 import com.newsmoa.app.domain.User;
 import com.newsmoa.app.domain.YourArticle;
+import com.newsmoa.app.dto.ArticleResponse;
 import com.newsmoa.app.repository.MypageRepository;
 import com.newsmoa.app.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,25 +21,31 @@ public class MypageService {
     private final MypageRepository mypageRepository;
     private final UserRepository userRepository;
 
-    public List<Article> getScrapedArticlesByUserId(String userId) {
+    public List<ArticleResponse> getScrapedArticlesByUserId(String userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
 
         List<YourArticle> scrapedEntries = mypageRepository.findByUserAndType(user, "scraped");
 
-        return scrapedEntries.stream()
+        List<ArticleResponse> scrapedArticles = scrapedEntries.stream()
                 .map(YourArticle::getArticle)
-                .collect(Collectors.toList());
+                .map(ArticleResponse::new)
+                .toList();
+        
+        return scrapedArticles;
     }
 
-    public List<Article> getRecentArticlesByUserId(String userId) {
+    public List<ArticleResponse> getRecentArticlesByUserId(String userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
 
         List<YourArticle> recentEntries = mypageRepository.findByUserAndType(user, "recent");
 
-        return recentEntries.stream()
+        List<ArticleResponse> recentArticles = recentEntries.stream()
                 .map(YourArticle::getArticle)
-                .collect(Collectors.toList());
+                .map(ArticleResponse::new)
+                .toList();
+
+        return recentArticles;
     }
 }

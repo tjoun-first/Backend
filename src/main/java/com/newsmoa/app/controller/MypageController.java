@@ -27,13 +27,7 @@ public class MypageController {
     @GetMapping("/scraped")
     public ResponseEntity<List<ArticleResponse>> scraped(Authentication authentication){
         String userId = authentication.getName();
-
-        List<Article> articles = mypageService.getScrapedArticlesByUserId(userId);
-
-        List<ArticleResponse> response = articles.stream()
-                .map(ArticleResponse::new)
-                .collect(Collectors.toList());
-
+        List<ArticleResponse> response = mypageService.getScrapedArticlesByUserId(userId);
         return ResponseEntity.ok().body(response);
     }
 
@@ -41,13 +35,7 @@ public class MypageController {
     @GetMapping("/recent")
     public ResponseEntity<List<ArticleResponse>> recent(Authentication authentication){
         String userId = authentication.getName();
-
-        List<Article> articles = mypageService.getRecentArticlesByUserId(userId);
-
-        List<ArticleResponse> response = articles.stream()
-                .map(ArticleResponse::new)
-                .collect(Collectors.toList());
-
+        List<ArticleResponse> response = mypageService.getRecentArticlesByUserId(userId);
         return ResponseEntity.ok().body(response);
     }
 }
