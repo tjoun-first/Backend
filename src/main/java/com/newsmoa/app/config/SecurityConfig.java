@@ -31,7 +31,7 @@ public class SecurityConfig {
              // HTTP 요청에 대한 접근 권한 설정
                 .authorizeHttpRequests(authorize -> authorize
                         // 문자열 패턴으로 변경
-                        .requestMatchers("/api/login", "/api/signup").permitAll() // /api/login, /api/signup 은 인증 없이 접근 허용
+                        .requestMatchers("/api/login", "/api/users").permitAll() // /api/login, /api/signup 은 인증 없이 접근 허용
                         .requestMatchers("/api/**").authenticated() // 나머지 /api/** 경로는 인증 필요
                         .anyRequest().permitAll() // 그 외 모든 요청은 일단 허용 (필요에 따라 변경)
                 )
