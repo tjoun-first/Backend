@@ -20,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 public class ArticleService {
 
     private final ArticleRepository articleRepository;
-    private final List<String> categories = List.of( "경제", "과학", "사회", "세계", "문화" );
 
     public List<Article> findArticlesByCategory(String category) {
         return articleRepository.findByCategory(category);
@@ -28,14 +27,6 @@ public class ArticleService {
 
     public java.util.Optional<Article> findArticleById(Long articleId) {
         return articleRepository.findById(articleId);
-    }
-    
-    public void refreshArticle() {
-        List<Article> updated = categories.stream()
-                .map(CrawlingUtil::crawlArticles)
-                .flatMap(List::stream)
-                .toList();
-        articleRepository.saveAll(updated);
     }
 
     // 신규 추가: 엔티티 → DTO 변환 전용 메서드 (핵심!)

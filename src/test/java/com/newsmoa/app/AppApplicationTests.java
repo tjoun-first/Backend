@@ -26,7 +26,7 @@ class AppApplicationTests {
     @Autowired
     AiUtil aiUtil;
     
-    @Disabled("gemini api 단독 테스트는 완료되었으므로 테스트 미실행")
+    @Disabled
 	@Test
 	void testGemini() {
         System.out.println("테스트 시작");
@@ -36,12 +36,22 @@ class AppApplicationTests {
     
     String url = "https://news.naver.com/section/101";
 
+    @Disabled
     @Test
-    void testCrowl(){
+    void testCrawl(){
         System.out.println("크롤링 테스트 시작");
         List<Article> articles = CrawlingUtil.crawlArticles("과학");
         for (Article article : articles) {
             System.out.println(article);
         }
+    }
+    
+    @Test
+    void testGetFullArticle(){
+        Article article = CrawlingUtil.crawlArticles("과학").get(0);
+        System.out.println(article);
+        article = aiUtil.summarizeArticle(article);
+        article = aiUtil.simplifyArticle(article);
+        System.out.println(article);
     }
 }
