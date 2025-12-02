@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
 @NoArgsConstructor
 @Data
 public class ArticleResponse {
@@ -20,6 +19,7 @@ public class ArticleResponse {
 	private String content;
 	private String simplified;
 	private String summary;
+    private Boolean isScraped;
 
 	// Article 객체를 받아서 DTO로 변환하는 생성자
     public ArticleResponse(Article article) {

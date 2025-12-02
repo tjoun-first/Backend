@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -96,5 +95,10 @@ public class MypageService {
 
         mypageRepository.findByUserAndArticleAndType(user, article, "scraped")
                 .ifPresent(mypageRepository::delete);
+    }
+
+    @Transactional
+    public Boolean checkArticleScrapedBy(Long articleId, String userId) {
+        return mypageRepository.existsByUserIdAndArticleArticleIdAndType(userId, articleId, "scraped");
     }
 }
