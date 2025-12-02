@@ -4,7 +4,7 @@ info:
   description: |
     NewsMoa Backend 서비스의 API 명세서입니다.
     기사 조회, 로그인, 마이페이지 기능을 제공합니다.
-  version: 1.7.0
+  version: 1.8.0
 servers:
   - url: /api
     description: 기본 API 서버
@@ -198,6 +198,35 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Article'
+                  
+  /util/word-meaning:
+    get:
+      summary: 단어의 의미 질문
+      description: 문장 내에서 단어의 의미를 gemini에게 질문합니다.
+      tags:
+        - Util
+      operationId: getWordMeaning
+      parameters:
+        - name: word
+          in: query
+          description: 질문할 단어
+          required: true
+          schema:
+            type: string
+        - name: sentence
+          in: query
+          description: 단어의 맥락 이해를 위해 해당 단어가 포함된 문장 전체
+          required: true
+          schema: 
+            type: string
+      responses: 
+        '200':
+          description: 문장 내에서 단어의 의미에 대한 설명 반환
+          content: 
+            text/plain:
+              schema: 
+                type: string
+                example: "이 문장에서 해당 단어는 별 의미가 없을 확률이 높습니다. 무시하셔도 됩니다."
 
 components:
   schemas:
