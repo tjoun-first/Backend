@@ -36,12 +36,13 @@ public class ArticleController {
 	@Operation(summary = "기사 세부정보 조회", description = "요청한 article_id의 기사의 모든 세부 정보를 반환합니다.")
 	@GetMapping("/id/{article_id}")
 	public ResponseEntity<ArticleResponse> getArticle(@PathVariable("article_id") Long article_id, @AuthenticationPrincipal UserDetails userDetails) {
+        ArticleResponse response = articleService.getArticleResponseById(article_id);
+        
 		if (userDetails != null) {
 			String userId = userDetails.getUsername();
 			mypageService.saveRecentArticle(userId, article_id);
+            response.setIsScraped(mypageService.checkArticleScrapedBy(article_id, userId));
 		}
-
-		ArticleResponse response = articleService.getArticleResponseById(article_id);
 		return ResponseEntity.ok(response);
 	}
 }
