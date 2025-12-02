@@ -4,7 +4,7 @@ info:
   description: |
     NewsMoa Backend 서비스의 API 명세서입니다.
     기사 조회, 로그인, 마이페이지 기능을 제공합니다.
-  version: 1.8.0
+  version: 1.9.0
 servers:
   - url: /api
     description: 기본 API 서버
@@ -284,3 +284,7 @@ components:
           nullable: true
           description: AI 요약본
           example: "정부는 오늘 새로운 정책을 발표했다."
+        isScraped:
+          type: boolean
+          nullable: false
+          description: 기사를 요청한 유저가 이 기사를 스크랩했는지 여부
