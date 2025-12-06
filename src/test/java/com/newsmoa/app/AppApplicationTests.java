@@ -3,6 +3,7 @@ package com.newsmoa.app;
 import com.newsmoa.app.domain.Article;
 import com.newsmoa.app.util.AiUtil;
 import com.newsmoa.app.util.CrawlingUtil;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +13,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
-import java.util.Set;
 
 //전체 스프링 컨텍스트를 올려서 테스트
 //@SpringBootTest
@@ -46,6 +46,7 @@ class AppApplicationTests {
         }
     }
     
+    @Disabled
     @Test
     void testGetFullArticle(){
         Article article = CrawlingUtil.crawlArticles("과학").get(0);
@@ -54,4 +55,13 @@ class AppApplicationTests {
         article = aiUtil.simplifyArticle(article);
         System.out.println(article);
     }
+    
+//    @Test
+//    void testGetUrls(){
+//        List<Article> articles = CrawlingUtil.getNewsList("과학");
+//        for(Article article : articles){
+//            System.out.println(article.getImg());
+//            Assertions.assertNotNull(article.getImg());
+//        }
+//    }
 }

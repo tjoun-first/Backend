@@ -8,11 +8,8 @@ import org.jsoup.select.NodeFilter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class CrawlingUtil {
     private static final String URL_ECONOMY = "https://news.naver.com/section/101";
@@ -44,9 +41,9 @@ public class CrawlingUtil {
      * 7. url을 필터링 해 기사 url만 추출
      * 8. 스트림을 리스트로 변환하여 리턴
     * */
-    private static Set<String> getNewsUrls(String category){
+    private static List<Article> getNewsList(String category){
         try {
-            Set<String> urlList = Jsoup.connect(URLS.get(category)).get()
+            List<Article> articles = Jsoup.connect(URLS.get(category)).get()
                     .body()
                     .filter((node, i) -> {
                         if (node instanceof Element &&
@@ -55,15 +52,21 @@ public class CrawlingUtil {
                         } else
                             return NodeFilter.FilterResult.CONTINUE;
                     })
-                    .getElementsByTag("a")
+                    .select("a:has(img)")                 
                     .stream()
-                    .map(a -> a.attr("href"))
-                    .filter(href ->
-                            href.startsWith(URL_ARTICLE_PREFIX)                 //기사 url만 추출
-                                    && !href.startsWith(URL_ARTICLE_PREFIX + "/comment")  //기사 댓글 url 제외
+                    .filter(a ->
+                            a.attr("href").startsWith(URL_ARTICLE_PREFIX)                 //기사 url만 추출
+                                    && !a.attr("href").startsWith(URL_ARTICLE_PREFIX + "/comment")  //기사 댓글 url 제외
                     )
-                    .collect(Collectors.toSet());
-            return urlList;
+                    .map(a->{
+                        Article article = new Article();
+                        article.setUrl(a.attr("href"));
+                        article.setCategory(category);
+                        article.setImg(a.selectFirst("img").attr("data-src"));
+                        return article;
+                    })
+                    .toList();
+            return articles;
         }
         catch (IOException e){
             return null;
@@ -94,13 +97,9 @@ public class CrawlingUtil {
     }
     
     public static List<Article> crawlArticles(String category){
-        List<Article> articles = new ArrayList<>();
-        for(String url : getNewsUrls(category)){
-            Article article = new Article();
-            article.setUrl(url);
-            article.setCategory(category);
-            article = getArticleDetail(article);
-            articles.add(article);
+        List<Article> articles = getNewsList(category);
+        for(Article article : articles){
+            getArticleDetail(article);
         }
         return articles;
     }

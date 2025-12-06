@@ -43,6 +43,9 @@ public class Article {
 
 	@Column(name = "title", length = 100, nullable = false)
 	private String title; // varchar(100)
+    
+    @Column(name="img", length = 100)
+    private String img;
 
 	@Lob
 	@Column(name = "content", length = 1000)
@@ -55,5 +58,4 @@ public class Article {
 	@Lob
 	@Column(name = "summary_content", length = 1000)
 	private String summaryContent; // varchar(1000)
-
 }

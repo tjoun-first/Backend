@@ -15,6 +15,7 @@ public class ArticleResponse {
 	private String category;
 	private LocalDate date;
 	private String url;
+    private String img;
 	private String title;
 	private String content;
 	private String simplified;
@@ -27,6 +28,7 @@ public class ArticleResponse {
         this.category = article.getCategory();
         this.date = article.getDate();
         this.url = article.getUrl();
+        this.img = article.getImg();
         this.title = article.getTitle();
         this.content = article.getContent();
         this.simplified = article.getSimplifiedContent();
