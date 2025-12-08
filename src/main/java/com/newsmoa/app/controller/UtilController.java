@@ -20,6 +20,7 @@ public class UtilController {
 
     @GetMapping("/word-meaning")
     public String getWordMeaning(@RequestParam("word") String word, @RequestParam("sentence") String sentence){
+    	System.out.println("단어 : "+word+"/ 문장 : "+sentence);
         return aiUtil.queryWord(word, sentence);
     }
 }

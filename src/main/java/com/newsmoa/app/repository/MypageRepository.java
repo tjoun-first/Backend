@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface MypageRepository extends JpaRepository<YourArticle, Long> {
     List<YourArticle> findByUserAndType(User user, String type);
     Optional<YourArticle> findByUserAndArticleAndType(User user, Article article, String type);
+    List<YourArticle> findByUserAndTypeOrderByViewedAtDesc(User user, String type);
 }
