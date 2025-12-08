@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 public class AdminService {
 
-    private final List<String> categories = List.of( /*"경제", "과학", "사회",*/ "세계", "문화"/**/ );
+    private final List<String> categories = List.of( "경제", "과학", "사회", "세계", "문화"/**/ );
     
     private final ArticleRepository articleRepository;
     private final AiUtil aiUtil;
