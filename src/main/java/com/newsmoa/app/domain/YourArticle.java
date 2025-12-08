@@ -1,5 +1,6 @@
 package com.newsmoa.app.domain;
 
+import java.time.LocalDateTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -28,6 +29,9 @@ public class YourArticle {
 
     @Column(name = "type", nullable = false)
     private String type; // Type (recent or scraped)
+    
+    @Column(name = "viewed_at")
+    private LocalDateTime viewedAt;
 
     // User와의 관계 설정: Many (YourArticle) to One (User)
     @ManyToOne(fetch = FetchType.LAZY) // 지연 로딩 설정 (성능 최적화)

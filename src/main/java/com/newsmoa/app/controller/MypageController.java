@@ -2,6 +2,7 @@ package com.newsmoa.app.controller;
 
 import com.newsmoa.app.domain.Article;
 import com.newsmoa.app.dto.ArticleResponse;
+import com.newsmoa.app.dto.RecentArticleResponse;
 import com.newsmoa.app.service.MypageService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -47,9 +48,9 @@ public class MypageController {
 
     @Operation(summary = "마이페이지 - 최근 본 기사 목록", description = "요청한 유저가 최근에 본 기사 리스트를 반환합니다. (세션 기반 인증)")
     @GetMapping("/recent")
-    public ResponseEntity<List<ArticleResponse>> recent(Authentication authentication){
+    public ResponseEntity<List<RecentArticleResponse>> recent(Authentication authentication){
         String userId = authentication.getName();
-        List<ArticleResponse> response = mypageService.getRecentArticlesByUserId(userId);
+        List<RecentArticleResponse> response = mypageService.getRecentArticlesByUserId(userId);
         return ResponseEntity.ok().body(response);
     }
 }

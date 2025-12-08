@@ -25,7 +25,7 @@ public class ArticleService {
  // 1. 목록 조회 
     public List<ArticleResponse> getArticlesByCategory(String category) {
         return articleRepository.findByCategory(category).stream()
-                .map(ArticleResponse::new)
+                .map(ArticleResponse::new) // 생성자 참조 : article -> new ArticleResponse(article) 와 동일
                 .collect(Collectors.toList());
     }
     
@@ -42,8 +42,6 @@ public class ArticleService {
     public ArticleResponse toResponse(Article article) {
         return new ArticleResponse(article);  // 생성자 활용
     }
-
-    
 
 }
 
