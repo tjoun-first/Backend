@@ -32,7 +32,7 @@ public class ArticleController {
 		return ResponseEntity.ok(articleService.getArticlesByCategory(category));
 	}
 
-	// 기사 요약문+해석문 조회
+	// 기사 세부정보 조회
 	@Operation(summary = "기사 세부정보 조회", description = "요청한 article_id의 기사의 모든 세부 정보를 반환합니다.")
 	@GetMapping("/id/{article_id}")
 	public ResponseEntity<ArticleResponse> getArticle(@PathVariable("article_id") Long article_id, @AuthenticationPrincipal UserDetails userDetails) {
@@ -45,4 +45,13 @@ public class ArticleController {
 		}
 		return ResponseEntity.ok(response);
 	}
+
+	// 검색어로 기사 검색
+	@Operation(summary = "검색어로 기사 검색", description = "입력한 키워드를 포함하는 제목을 가진 기사들의 목록을 반환합니다.")
+	@GetMapping("/search")
+	public ResponseEntity<List<ArticleResponse>> searchArticles(@RequestParam("keyword") String keyword) {
+		return ResponseEntity.ok(articleService.searchArticlesByKeyword(keyword));
+	}
+
+
 }
