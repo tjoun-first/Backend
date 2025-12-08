@@ -29,11 +29,11 @@ public class AdminService {
         List<Article> updated = categories.stream()
                 .map(CrawlingUtil::crawlArticles)
                 .flatMap(List::stream)
-                .map(aiUtil::simplifyArticle)
-                .map(aiUtil::summarizeArticle)
-                .map(articleRepository::save) //임시저장
+//                .map(aiUtil::simplifyArticle)
+//                .map(aiUtil::summarizeArticle)
+//                .map(articleRepository::save) //임시저장
                 .toList();
-//        articleRepository.saveAll(updated);
+        articleRepository.saveAll(updated);
         log.warn(updated.size() + " articles have been added");
     }
     
