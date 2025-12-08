@@ -45,7 +45,7 @@ public class ArticleService {
 
     // 3. 검색어로 기사 검색
     public List<ArticleResponse> searchArticlesByKeyword(String keyword) {
-        return articleRepository.findByTitleContaining(keyword).stream()
+        return articleRepository.searchByKeyword("*" + keyword + "*").stream()
                 .map(ArticleResponse::new)
                 .collect(Collectors.toList());
     }
