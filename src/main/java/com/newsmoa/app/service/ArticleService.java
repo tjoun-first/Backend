@@ -51,5 +51,12 @@ public class ArticleService {
         return new ArticleResponse(article);  // 생성자 활용
     }
 
+    // 3. 검색어로 기사 검색
+    public List<ArticleResponse> searchArticlesByKeyword(String keyword) {
+        return articleRepository.searchByKeyword("*" + keyword + "*").stream()
+                .map(ArticleResponse::new)
+                .collect(Collectors.toList());
+    }
+
 }
 

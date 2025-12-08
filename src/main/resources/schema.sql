@@ -1,0 +1,1 @@
+ALTER TABLE article ADD FULLTEXT INDEX  ft_title_content (title, content) WITH PARSER ngram;
