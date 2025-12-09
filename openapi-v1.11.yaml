@@ -4,7 +4,7 @@ info:
   description: |
     NewsMoa Backend 서비스의 API 명세서입니다.
     기사 조회, 로그인, 마이페이지 기능을 제공합니다.
-  version: 1.10.0
+  version: 1.11.0
 servers:
   - url: /api
     description: 기본 API 서버
@@ -156,6 +156,23 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Article'
+                  
+  /article/recommand:
+    get:
+      summary: 기사 추천
+      description: 조회수 기반으로 5개의 추천 기사를 반환합니다.
+      tags:
+        - Article
+      operationId: recommandArticle
+      responses:
+        '200':
+          description: 추천 기사 반환
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Article'
 
   /mypage/scraped:
     get:
@@ -290,6 +307,10 @@ components:
           type: string
           description: 원본 기사 URL
           example: "https://news.example.com/12"
+        img:
+          type: string
+          description: 기사 이미지 URL
+          example: "https://img.example.com/10"
         title:
           type: string
           description: 기사 제목
