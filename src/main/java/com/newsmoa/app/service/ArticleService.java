@@ -41,8 +41,9 @@ public class ArticleService {
         if(article.getSimplifiedContent() == null || article.getSummaryContent() == null) {
             aiUtil.simplifyArticle(article);
             aiUtil.summarizeArticle(article);
-            articleRepository.save(article);
         }
+        article.setViewCount(article.getViewCount() + 1); //조회수 처리
+        articleRepository.save(article); //ai 및 조회수 처리가 끝난 데이터를 다시 저장
         return new ArticleResponse(article);
     }
 

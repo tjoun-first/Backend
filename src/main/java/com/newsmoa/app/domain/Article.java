@@ -4,15 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -58,4 +50,12 @@ public class Article {
 	@Lob
 	@Column(name = "summary_content", length = 1000)
 	private String summaryContent; // varchar(1000)
+    
+    @Column(name = "viewCount", nullable = false)
+    private Long viewCount = 0L;
+    
+    @PrePersist
+    public void prePersist() {
+        if (viewCount == null) viewCount = 0L;
+    }
 }
