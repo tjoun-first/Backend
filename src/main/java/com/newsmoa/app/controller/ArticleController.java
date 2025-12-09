@@ -4,6 +4,7 @@ import com.newsmoa.app.dto.ArticleResponse;
 import com.newsmoa.app.service.ArticleService;
 import com.newsmoa.app.service.MypageService;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/article")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -50,7 +52,9 @@ public class ArticleController {
 	@Operation(summary = "검색어로 기사 검색", description = "입력한 키워드를 포함하는 제목을 가진 기사들의 목록을 반환합니다.")
 	@GetMapping("/search")
 	public ResponseEntity<List<ArticleResponse>> searchArticles(@RequestParam("keyword") String keyword) {
-		return ResponseEntity.ok(articleService.searchArticlesByKeyword(keyword));
+        List<ArticleResponse> result = articleService.searchArticlesByKeyword(keyword);
+        log.info("검색 요청됨. keyword={}, result={}", keyword, result);
+        return ResponseEntity.ok(result);
 	}
 
 
