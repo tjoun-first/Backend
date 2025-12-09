@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,10 +26,7 @@ public class MypageService {
     private final ArticleRepository articleRepository;
 
     public List<ArticleResponse> getScrapedArticlesByUserId(String userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
-
-        List<YourArticle> scrapedEntries = mypageRepository.findByUserAndType(user, "scraped");
+        List<YourArticle> scrapedEntries = mypageRepository.findScrapedByUserId(userId);
 
         List<ArticleResponse> scrapedArticles = scrapedEntries.stream()
                 .map(YourArticle::getArticle)
@@ -41,10 +37,7 @@ public class MypageService {
     }
 
     public List<RecentArticleResponse> getRecentArticlesByUserId(String userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
-
-        List<YourArticle> recentEntries = mypageRepository.findByUserAndTypeOrderByViewedAtDesc(user, "recent");
+        List<YourArticle> recentEntries = mypageRepository.findRecentByUserIdOrderByViewedAtDesc(userId);
 
         List<RecentArticleResponse> recentArticles = recentEntries.stream()
                 .map(RecentArticleResponse::new)
@@ -55,18 +48,18 @@ public class MypageService {
 
     @Transactional
     public void saveRecentArticle(String userId, Long articleId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
-        Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new IllegalArgumentException("Article not found with id: " + articleId));
-
-        Optional<YourArticle> existingEntry = mypageRepository.findByUserAndArticleAndType(user, article, "recent");
+        Optional<YourArticle> existingEntry = 
+                mypageRepository.findByUserIdAndArticleArticleIdAndType(userId, articleId, "recent");
 
         if (existingEntry.isPresent()) {
             YourArticle yourArticle = existingEntry.get();
             yourArticle.setViewedAt(LocalDateTime.now());
             mypageRepository.save(yourArticle);
         } else {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
+            Article article = articleRepository.findById(articleId)
+                    .orElseThrow(() -> new IllegalArgumentException("Article not found with id: " + articleId));
             YourArticle yourArticle = new YourArticle();
             yourArticle.setUser(user);
             yourArticle.setArticle(article);
@@ -84,7 +77,7 @@ public class MypageService {
                 .orElseThrow(() -> new IllegalArgumentException("Article not found with id: " + articleId));
 
         // Check if the "scraped" article entry already exists for this user and article
-        mypageRepository.findByUserAndArticleAndType(user, article, "scraped").ifPresent(mypageRepository::delete);
+        mypageRepository.findByUserIdAndArticleArticleIdAndType(userId, articleId, "scraped").ifPresent(mypageRepository::delete);
 
         YourArticle yourArticle = new YourArticle();
         yourArticle.setUser(user);
@@ -96,12 +89,7 @@ public class MypageService {
 
     @Transactional
     public void deleteScrapedArticle(String userId, Long articleId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
-        Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new IllegalArgumentException("Article not found with id: " + articleId));
-
-        mypageRepository.findByUserAndArticleAndType(user, article, "scraped")
+        mypageRepository.findByUserIdAndArticleArticleIdAndType(userId, articleId, "scraped")
                 .ifPresent(mypageRepository::delete);
     }
 
