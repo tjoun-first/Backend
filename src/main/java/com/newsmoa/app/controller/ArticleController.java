@@ -53,5 +53,12 @@ public class ArticleController {
 		return ResponseEntity.ok(articleService.searchArticlesByKeyword(keyword));
 	}
 
+	// 조회수 상위 5개 기사 목록 조회
+	@Operation(summary = "조회수 상위 5개 기사 목록 조회", description = "조회수를 기준으로 상위 5개 기사의 목록을 반환합니다.")
+	@GetMapping("/all")
+	public ResponseEntity<List<ArticleResponse>> getTopArticles() {
+		return ResponseEntity.ok(articleService.getTopArticles());
+	}
+
 
 }

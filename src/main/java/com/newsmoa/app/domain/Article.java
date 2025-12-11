@@ -58,4 +58,7 @@ public class Article {
 	@Lob
 	@Column(name = "summary_content", length = 1000)
 	private String summaryContent; // varchar(1000)
+
+	@Column(name = "view_count", nullable = false)
+	private Integer viewCount = 0;
 }

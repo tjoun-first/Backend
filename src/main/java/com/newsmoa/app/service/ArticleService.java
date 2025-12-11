@@ -32,10 +32,13 @@ public class ArticleService {
     }
     
  // 2. 단건 조회(상세 조회) ->  ID로 바로 DTO 가져오기
+    @Transactional
     public ArticleResponse getArticleResponseById(Long articleId) {
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Article not found with id: " + articleId));
+
+        article.setViewCount(article.getViewCount() + 1);
         
         //ai가 채우는 데이터 lazy loading
         if(article.getSimplifiedContent() == null || article.getSummaryContent() == null) {
@@ -54,6 +57,13 @@ public class ArticleService {
     // 3. 검색어로 기사 검색
     public List<ArticleResponse> searchArticlesByKeyword(String keyword) {
         return articleRepository.searchByKeyword("*" + keyword + "*").stream()
+                .map(ArticleResponse::new)
+                .collect(Collectors.toList());
+    }
+
+    // 4. 조회수 상위 5개 기사 가져오기
+    public List<ArticleResponse> getTopArticles() {
+        return articleRepository.findTop5ByOrderByViewCountDesc().stream()
                 .map(ArticleResponse::new)
                 .collect(Collectors.toList());
     }
