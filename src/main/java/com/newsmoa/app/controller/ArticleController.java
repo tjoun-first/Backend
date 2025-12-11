@@ -1,7 +1,9 @@
 package com.newsmoa.app.controller;
 
 import com.newsmoa.app.dto.ArticleResponse;
+import com.newsmoa.app.dto.CommentResponse;
 import com.newsmoa.app.service.ArticleService;
+import com.newsmoa.app.service.CommentService;
 import com.newsmoa.app.service.MypageService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +20,13 @@ import java.util.List;
 public class ArticleController {
 	private final ArticleService articleService;
 	private final MypageService mypageService;
+	private final CommentService commentService;
 
 	@Autowired
-	public ArticleController(ArticleService articleService, MypageService mypageService) {
+	public ArticleController(ArticleService articleService, MypageService mypageService, CommentService commentService) {
 		this.articleService = articleService;
 		this.mypageService = mypageService;
+		this.commentService = commentService;
 	}
 
 	// 기사 목록 조회
@@ -60,5 +64,13 @@ public class ArticleController {
 		return ResponseEntity.ok(articleService.getTopArticles());
 	}
 
+	// 기사에 달린 댓글 목록 조회
+	@Operation(summary = "기사 댓글 목록 조회", description = "요청한 article_id의 기사에 달린 승인된 댓글 목록을 계층적으로 반환합니다.")
+	@GetMapping("/{article_id}/comment")
+	public ResponseEntity<List<CommentResponse>> getCommentsByArticle(@PathVariable("article_id") Long article_id) {
+		return ResponseEntity.ok(commentService.getCommentsByArticleId(article_id));
+	}
+
 
 }
+
