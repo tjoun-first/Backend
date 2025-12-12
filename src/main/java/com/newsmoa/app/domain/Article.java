@@ -14,7 +14,9 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "article")
+@Table(name = "article", uniqueConstraints = {
+        @UniqueConstraint(name="uk_url",columnNames = {"url"})
+})
 public class Article {
 
 	// PK: article_id. Long 타입이 일반적으로 ID로 많이 사용됨
@@ -30,7 +32,7 @@ public class Article {
 	@Column(name = "date", nullable = false)
 	private LocalDate date; // DATE
 
-	@Column(name = "url", length = 100, nullable = false)
+	@Column(name = "url", length = 100, nullable = false, unique = true)
 	private String url; // varchar(50)
 
 	@Column(name = "title", length = 100, nullable = false)
