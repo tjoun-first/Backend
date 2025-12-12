@@ -21,20 +21,22 @@ public class ArticleResponse {
 	private String title;
 	private String content;
 	private String simplified;
-	private String summary;
-    private Boolean isScraped;
-	private LocalDateTime viewedAt;
-
-	// Article 객체를 받아서 DTO로 변환하는 생성자
-    public ArticleResponse(Article article) {
-        this.articleId = article.getArticleId();
-        this.category = article.getCategory();
-        this.date = article.getDate();
-        this.url = article.getUrl();
-        this.img = article.getImg();
-        this.title = article.getTitle();
-        this.content = article.getContent();
-        this.simplified = article.getSimplifiedContent();
-        this.summary = article.getSummaryContent();
-    }
-}
+	    private String summary;
+	    private Boolean isScraped;
+		private LocalDateTime viewedAt;
+		private Long viewCount;
+	
+		// Article 객체를 받아서 DTO로 변환하는 생성자
+	    public ArticleResponse(Article article) {
+	        this.articleId = article.getArticleId();
+	        this.category = article.getCategory();
+	        this.date = article.getDate();
+	        this.url = article.getUrl();
+	        this.img = article.getImg();
+	        this.title = article.getTitle();
+	        this.content = article.getContent();
+	        this.simplified = article.getSimplifiedContent();
+	        this.summary = article.getSummaryContent();
+			this.viewCount = article.getViewCount();
+	    }
+	}

@@ -13,4 +13,6 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     @Query(value = "SELECT * FROM article WHERE MATCH(title, content) AGAINST(:keyword IN BOOLEAN MODE)", nativeQuery = true)
     List<Article> searchByKeyword(@Param("keyword") String keyword);
+
+    List<Article> findTop5ByOrderByViewCountDesc();
 }

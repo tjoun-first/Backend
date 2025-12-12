@@ -53,7 +53,7 @@ public class Article {
 	@Column(name = "summary_content", length = 1000)
 	private String summaryContent; // varchar(1000)
     
-    @Column(name = "viewCount", nullable = false)
+    @Column(name = "view_count", nullable = false)
     private Long viewCount = 0L;
     
     @PrePersist
