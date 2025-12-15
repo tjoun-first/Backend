@@ -1,17 +1,21 @@
 package com.newsmoa.app;
 
 import com.newsmoa.app.domain.Article;
+import com.newsmoa.app.dto.AssemblyMember;
 import com.newsmoa.app.util.AiUtil;
 import com.newsmoa.app.util.CrawlingUtil;
-import org.junit.jupiter.api.Assertions;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.io.InputStreamReader;
 import java.util.List;
 
 //전체 스프링 컨텍스트를 올려서 테스트
@@ -64,4 +68,22 @@ class AppApplicationTests {
 //            Assertions.assertNotNull(article.getImg());
 //        }
 //    }
+    
+
+    @Test
+    void testLoadCsv() throws Exception {
+        InputStreamReader isr = new InputStreamReader(new ClassPathResource("static\\국회의원 현황.csv").getInputStream());
+        try (CSVReader reader =
+                     new CSVReaderBuilder(isr)
+                             .withSkipLines(1).build()) {
+
+            List<AssemblyMember> rows = reader.readAll().stream()
+                    .map(token -> new AssemblyMember(
+                            token[0],
+                            token[1]
+                    ))
+                    .toList();
+            System.out.println(rows);
+        }
+    }
 }

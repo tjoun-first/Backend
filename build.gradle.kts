@@ -32,6 +32,8 @@ dependencies {
 	providedRuntime("org.springframework.boot:spring-boot-starter-tomcat-runtime")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testCompileOnly("org.projectlombok:lombok")
+    testAnnotationProcessor("org.projectlombok:lombok")
 
     //WebClient(gemini api 요청용)
     implementation("org.springframework:spring-webflux")
@@ -53,6 +55,9 @@ dependencies {
     
     //jsoup
     implementation("org.jsoup:jsoup:1.17.2")
+    
+    //open csv
+    implementation("com.opencsv:opencsv:5.9")
 }
 
 tasks.withType<Test> {
