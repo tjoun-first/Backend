@@ -4,7 +4,7 @@ info:
   description: |
     NewsMoa Backend 서비스의 API 명세서입니다.
     기사 조회, 로그인, 마이페이지 기능을 제공합니다.
-  version: 1.12.0
+  version: 1.13.0
 servers:
   - url: /api
     description: 기본 API 서버
@@ -207,6 +207,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Comment'
+                  
     post:
       summary: 기사 댓글 작성
       description: 요청한 article_id에 대한 댓글을 작성합니다.
@@ -220,35 +221,22 @@ paths:
           required: true
           schema:
             type: integer
-      responses:
-        '200':
-          description: 댓글 작성 성공
-  
-  /comment/{parentCommentId}/reply:
-    post:
-      summary: 대댓글 작성
-      description: 요청한 parentCommentId에 대한 대댓글을 작성합니다.
-      tags:
-        - Article
-      operationId: createReplyComment
-      parameters:
-        - name: parentCommentId
+        - name: parent_comment_id
           in: path
-          description: 대댓글을 작성할 부모 댓글 ID
+          description: 대댓글을 작성할 부모 댓글 ID(일반 댓글은 null)
           required: true
           schema:
             type: integer
       requestBody:
         required: true
         content:
-          application/json:
+          text/plain:
             schema:
-              $ref: '#/components/schemas/ReplyRequest'
+              type: string
+              example: "댓글내용 입니다."
       responses:
         '200':
-          description: 대댓글 작성 성공
-  
-  
+          description: 댓글 작성 성공
   
   /mypage/scraped:
     get:
@@ -385,6 +373,7 @@ components:
           example: "https://news.example.com/12"
         img:
           type: string
+          description: 기사 이미지 URL
           example: "https://img.example.com/10"
         title:
           type: string
@@ -412,7 +401,6 @@ components:
       type: object
       description: |
         단일 댓글 객체입니다. 
-        대댓글(children)을 포함하여 재귀적인 구조를 가집니다.
       properties:
         commentId:
           type: integer
@@ -432,14 +420,6 @@ components:
           type: string
           description: 댓글 내용
           example: "첫 번째 최상위 댓글입니다. (Parent 1)"
-        status:
-          type: string
-          description: 댓글 상태 (approved, pending, reported 중 하나)
-          enum:
-            - approved
-            - pending
-            - reported
-          example: "approved"
         likeCount:
           type: integer
           format: int32
@@ -450,11 +430,6 @@ components:
           format: date-time
           description: 댓글 작성 시간
           example: "2025-12-11T21:37:28"
-        updatedAt:
-          type: string
-          format: date-time
-          description: 댓글 최종 수정 시간
-          example: "2025-12-11T21:37:28"
         parentCommentId:
           type: integer
           format: int64
@@ -463,30 +438,7 @@ components:
             부모 댓글의 ID. 
             최상위 댓글일 경우 null.
           example: null
-        children:
-          type: array
-          description: 이 댓글에 달린 대댓글 목록입니다.
-          items:
-            $ref: '#/components/schemas/Comment'
-    ReplyRequest:
-      type: object
-      description: 대댓글 작성 요청 DTO
-      properties:
-        content:
-          type: string
-          description: 대댓글 내용
-          example: "이것은 대댓글입니다."
-        userId:
-          type: string
-          description: 작성자 ID
-          example: "user123"
-        status:
-          type: string
-          description: 댓글 상태
-          enum:
-            - approved
-            - pending
-            - reported
-          example: "approved"
-      required:
-        - content
+        isMine:
+          type: boolean
+          description: 자신의 댓글인지 여부
+          example: true
