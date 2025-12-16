@@ -69,4 +69,16 @@ public class CommentService {
 
         return new CommentResponse(savedComment, userId);
     }
+
+    @Transactional
+    public void deleteComment(Long commentId, String userId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("Comment not found with id: " + commentId));
+
+        if (!comment.getUser().getId().equals(userId)) {
+            throw new IllegalArgumentException("User is not authorized to delete this comment");
+        }
+
+        commentRepository.delete(comment);
+    }
 }
