@@ -1,14 +1,11 @@
 package com.newsmoa.app.domain;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDate;
 
 @Setter
 @Getter
@@ -22,7 +19,7 @@ public class Article {
 	// PK: article_id. Long 타입이 일반적으로 ID로 많이 사용됨
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // DB가 ID를 자동 생성하도록 설정
-	@Column(name = "article_id", nullable = false)
+	@Column(name = "article_id", nullable = false, insertable = false)
 	private Long articleId; // NUMBER
 
 	@Column(name = "category", length = 20, nullable = false)
@@ -46,11 +43,11 @@ public class Article {
 	private String content; // varchar(1000)
 
 	@Lob
-	@Column(name = "simplified_content", length = 1000)
+	@Column(name = "simplified_content", length = 1000, insertable = false)
 	private String simplifiedContent; // varchar(1000)
 
 	@Lob
-	@Column(name = "summary_content", length = 1000)
+	@Column(name = "summary_content", length = 1000, insertable = false)
 	private String summaryContent; // varchar(1000)
     
     @Column(name = "view_count", nullable = false)

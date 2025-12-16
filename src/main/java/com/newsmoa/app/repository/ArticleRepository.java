@@ -4,11 +4,12 @@ import com.newsmoa.app.domain.Article;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
-public interface ArticleRepository extends JpaRepository<Article, Long> {
+@Repository
+public interface ArticleRepository extends JpaRepository<Article, Long>, ArticleRepositoryCustom {
     List<Article> findByCategory(String category);
 
     @Query(value = "SELECT * FROM article WHERE MATCH(title, content) AGAINST(:keyword IN BOOLEAN MODE)", nativeQuery = true)
