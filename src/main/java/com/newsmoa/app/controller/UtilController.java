@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/util")
+@RequestMapping("/api/util")
 public class UtilController {
     
     private final AiUtil aiUtil;
@@ -26,6 +26,4 @@ public class UtilController {
     public String getWordMeaning(@RequestParam("word") String word, @RequestParam("sentence") String sentence){
         return aiUtil.queryWord(word, sentence);
     }
-    
-    
 }
