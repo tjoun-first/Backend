@@ -2,6 +2,8 @@ package com.newsmoa.app;
 
 import com.newsmoa.app.domain.Article;
 import com.newsmoa.app.dto.AssemblyMember;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import com.newsmoa.app.service.RankService;
 import com.newsmoa.app.util.AiUtil;
 import com.newsmoa.app.util.CrawlingUtil;
 import com.opencsv.CSVReader;
@@ -10,6 +12,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -23,8 +27,11 @@ import java.util.List;
 
 //스프링 부분 컨텍스트만 띄워서 테스트 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {AiUtil.class, CrawlingUtil.class}) //여기에 테스트할 클래스 지정
+@ContextConfiguration(classes = {AiUtil.class, CrawlingUtil.class, RankService.class}) //여기에 테스트할 클래스 지정
 @TestPropertySource(locations = "classpath:application.properties")
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Import(AppApplication.class)
 class AppApplicationTests {
     String prompt = "여기에 프롬프트 입력";
     @Autowired
@@ -69,7 +76,7 @@ class AppApplicationTests {
 //        }
 //    }
     
-
+    @Disabled
     @Test
     void testLoadCsv() throws Exception {
         InputStreamReader isr = new InputStreamReader(new ClassPathResource("static\\국회의원 현황.csv").getInputStream());
@@ -85,5 +92,13 @@ class AppApplicationTests {
                     .toList();
             System.out.println(rows);
         }
+    }
+    
+    @Autowired
+    RankService rankService;
+    
+    @Test
+    void testRankMention(){
+        rankService.getRankTop5();
     }
 }

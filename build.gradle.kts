@@ -58,6 +58,9 @@ dependencies {
     
     //open csv
     implementation("com.opencsv:opencsv:5.9")
+    
+    //jpa test
+    testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
 }
 
 tasks.withType<Test> {
