@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,6 +19,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,7 +28,10 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "comment")
 public class Comment {
     @Id
@@ -41,19 +47,12 @@ public class Comment {
     @JoinColumn(name = "user_id", nullable = false) // user_id 컬럼을 외래 키로 사용
     private User user; // 작성자 id
     
-    @Column(name = "status", nullable = false)
-    private String status;  // 댓글 상태 : approved(승인)/pending(보류)/reported(신고)
-    
     @Column(name = "like_count", nullable = false)
-    private int likeCount = 0;  // 좋아요 수
+    private Long likeCount = 0L;  // 좋아요 수
     
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();  // 작성일
-    
-    @LastModifiedDate
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt = LocalDateTime.now();  // 수정일
     
     @ManyToOne
     @JoinColumn(name = "article_id", nullable = false)

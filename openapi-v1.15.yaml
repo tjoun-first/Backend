@@ -3,7 +3,7 @@ info:
   title: NewsMoa Backend API
   description: |
     NewsMoa Backend 서비스의 API 명세서입니다.
-    기사 조회, 로그인, 마이페이지 기능을 제공합니다.
+    기사 조회, 로그인, 마이페이지, 댓글 기능을 제공합니다.
   version: 1.14.0
 servers:
   - url: /api
@@ -189,7 +189,7 @@ paths:
       summary: 기사 댓글 조회
       description: 요청한 article_id에 대한 댓글 목록을 반환합니다.
       tags:
-        - Article
+        - Comment
       operationId: getArticleComments
       parameters:
         - name: article_id
@@ -206,13 +206,12 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Comment'
-                  
+                  $ref: '#/components/schemas/CommentResponse' # Changed to CommentResponse
     post:
       summary: 기사 댓글 작성
       description: 요청한 article_id에 대한 댓글을 작성합니다.
       tags:
-        - Article
+        - Comment
       operationId: createArticleComment
       parameters:
         - name: article_id
@@ -224,7 +223,7 @@ paths:
         - name: parent_comment_id
           in: query
           description: 대댓글을 작성할 부모 댓글 ID(일반 댓글은 null)
-          required: true
+          required: false # Changed to false
           schema:
             type: integer
       requestBody:
@@ -235,9 +234,80 @@ paths:
               type: string
               example: "댓글내용 입니다."
       responses:
-        '200':
+        '201': # Changed to 201 Created
           description: 댓글 작성 성공
-  
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentResponse'
+        '400':
+          description: 잘못된 요청 또는 부모 댓글 오류
+        '404':
+          description: 기사 또는 사용자 찾을 수 없음
+    delete: # Added DELETE operation
+      summary: 기사 댓글 삭제
+      description: 요청한 article_id에 속한 특정 댓글을 삭제합니다. (본인 댓글만 삭제 가능)
+      tags:
+        - Comment
+      operationId: deleteArticleComment
+      parameters:
+        - name: article_id
+          in: path
+          description: 댓글이 속한 기사 ID
+          required: true
+          schema:
+            type: integer
+        - name: comment_id
+          in: query
+          description: 삭제할 댓글 ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: 댓글 삭제 성공 (No Content)
+        '403':
+          description: 접근 권한 없음 (본인 댓글이 아님)
+        '404':
+          description: 댓글 찾을 수 없음
+    patch: # Added PATCH operation
+      summary: 기사 댓글 수정
+      description: 요청한 article_id에 속한 특정 댓글의 내용을 수정합니다. (본인 댓글만 수정 가능)
+      tags:
+        - Comment
+      operationId: updateArticleComment
+      parameters:
+        - name: article_id
+          in: path
+          description: 댓글이 속한 기사 ID
+          required: true
+          schema:
+            type: integer
+        - name: comment_id
+          in: query
+          description: 수정할 댓글 ID
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: "수정된 댓글내용 입니다."
+      responses:
+        '200':
+          description: 댓글 수정 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentResponse'
+        '403':
+          description: 접근 권한 없음 (본인 댓글이 아님)
+        '404':
+          description: 댓글 찾을 수 없음
+
   /mypage/scraped:
     get:
       summary: 마이페이지 - 스크랩한 기사 목록
@@ -412,10 +482,52 @@ components:
           type: boolean
           nullable: false
           description: 기사를 요청한 유저가 이 기사를 스크랩했는지 여부
-    Comment:
+    CommentResponse: # Added CommentResponse schema
+      type: object
+      description: 댓글 정보 DTO
+      properties:
+        commentId:
+          type: integer
+          format: int64
+          description: 댓글 ID
+          example: 1
+        content:
+          type: string
+          description: 댓글 내용
+          example: "새로운 댓글입니다."
+        userId:
+          type: string
+          description: 댓글 작성자 ID
+          example: "user123"
+        likeCount:
+          type: integer
+          format: int64
+          description: 좋아요 수
+          example: 0
+        createdAt:
+          type: string
+          format: date-time
+          description: 작성일
+          example: "2024-01-01T12:00:00Z"
+        articleId:
+          type: integer
+          format: int64
+          description: 댓글이 달린 기사 ID
+          example: 12
+        parentCommentId:
+          type: integer
+          format: int64
+          description: 부모 댓글 ID (답글인 경우)
+          nullable: true
+          example: null
+        isMine:
+          type: boolean
+          description: 현재 로그인한 사용자가 작성한 댓글인지 여부
+          example: true
+    Comment: # Updated existing Comment schema
       type: object
       description: |
-        단일 댓글 객체입니다. 
+        단일 댓글 객체입니다. (CommentResponse와 동일)
       properties:
         commentId:
           type: integer

@@ -1,19 +1,26 @@
 package com.newsmoa.app.controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.newsmoa.app.dto.ArticleResponse;
 import com.newsmoa.app.dto.CommentResponse;
 import com.newsmoa.app.service.ArticleService;
 import com.newsmoa.app.service.CommentService;
 import com.newsmoa.app.service.MypageService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -63,17 +70,19 @@ public class ArticleController {
 
 	// 조회수 상위 5개 기사 목록 조회
 	@Operation(summary = "조회수 상위 5개 기사 목록 조회", description = "조회수를 기준으로 상위 5개 기사의 목록을 반환합니다.")
-	@GetMapping("/all")
+	@GetMapping("/recommand")
 	public ResponseEntity<List<ArticleResponse>> getTopArticles() {
 		return ResponseEntity.ok(articleService.getTopArticles());
 	}
 
 	// 기사에 달린 댓글 목록 조회
-	@Operation(summary = "기사 댓글 목록 조회", description = "요청한 article_id의 기사에 달린 승인된 댓글 목록을 계층적으로 반환합니다.")
+	@Operation(summary = "기사 댓글 목록 조회", description = "요청한 article_id의 기사에 달린 댓글을 반환합니다")
 	@GetMapping("/{article_id}/comment")
-	public ResponseEntity<List<CommentResponse>> getCommentsByArticle(@PathVariable("article_id") Long article_id) {
-		return ResponseEntity.ok(commentService.getCommentsByArticleId(article_id));
+	public ResponseEntity<List<CommentResponse>> getCommentsByArticle(@PathVariable("article_id") Long article_id, @AuthenticationPrincipal UserDetails userDetails) {
+		String userId = (userDetails != null) ? userDetails.getUsername() : null;
+		return ResponseEntity.ok(commentService.getCommentsByArticleId(article_id, userId));
 	}
+	
 
 
 }
