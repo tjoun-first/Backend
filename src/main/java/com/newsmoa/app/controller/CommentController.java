@@ -6,6 +6,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,5 +47,16 @@ public class CommentController {
         String userId = userDetails.getUsername();
         commentService.deleteComment(commentId, userId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/article/{article_id}/comment")
+    public ResponseEntity<CommentResponse> updateComment(
+            @PathVariable("article_id") Long articleId,
+            @RequestParam("comment_id") Long commentId,
+            @RequestBody String content,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        String userId = userDetails.getUsername();
+        CommentResponse updatedComment = commentService.updateComment(commentId, userId, content);
+        return ResponseEntity.ok(updatedComment);
     }
 }

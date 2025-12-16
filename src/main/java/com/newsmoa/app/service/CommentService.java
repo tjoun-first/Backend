@@ -81,4 +81,18 @@ public class CommentService {
 
         commentRepository.delete(comment);
     }
+
+    @Transactional
+    public CommentResponse updateComment(Long commentId, String userId, String newContent) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("Comment not found with id: " + commentId));
+
+        if (!comment.getUser().getId().equals(userId)) {
+            throw new IllegalArgumentException("User is not authorized to update this comment(현재 사용자와 수정하려는 댓글을 작성한 사용자가 다르다궁...)");
+        }
+
+        comment.setContent(newContent);
+        // Spring Data JPA의 @Transactional 덕분에 별도의 save 호출 없이 변경 감지 (dirty checking)를 통해 업데이트됩니다.
+        return new CommentResponse(comment, userId);
+    }
 }
