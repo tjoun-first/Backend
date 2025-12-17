@@ -51,6 +51,13 @@ public class AdminService {
     public void refreshStats(List<Article> newArticles) {
         Map<String, Long> countMap = new HashMap<>();
         List<AssemblyMember> memberList = CsvUtil.getMember();
+        memberList.addAll(
+                memberList.stream()
+                        .map(AssemblyMember::partyName)
+                        .distinct()
+                        .map(partyName -> new AssemblyMember(partyName,partyName))
+                        .toList()
+        );
         statsRepository.deleteAll();
         Pattern pattern = Pattern.compile(
                 memberList.stream()
@@ -85,6 +92,6 @@ public class AdminService {
                                 ))
                         .toList();
         statsRepository.saveAll(result);
-        log.warn(countMap.toString());
+        log.debug("언급수 통계 계산됨: " + countMap.toString());
     }
 }

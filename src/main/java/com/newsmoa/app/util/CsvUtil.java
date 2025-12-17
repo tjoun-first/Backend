@@ -10,6 +10,7 @@ import org.springframework.core.io.ClassPathResource;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class CsvUtil {
@@ -27,7 +28,7 @@ public class CsvUtil {
                                 token[0], //사람 이름
                                 token[1]  //정당 이름
                         ))
-                        .toList();
+                        .collect(Collectors.toList());
             }
         }
         catch (IOException e){
