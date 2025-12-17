@@ -79,7 +79,7 @@ public class UserController {
     }
 
     @Operation(summary = "아이디 중복 체크", description = "입력한 로그인 아이디의 중복 여부를 확인합니다.")
-    @GetMapping("users/exists")
+    @GetMapping("/users/exists")
     public boolean checkId(@RequestParam("id") String id) {
         return userService.isIdAvailable(id);
     }

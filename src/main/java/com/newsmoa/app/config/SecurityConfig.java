@@ -1,5 +1,7 @@
 package com.newsmoa.app.config;
 
+import com.newsmoa.app.security.EncodedCategoryMatcher;
+import com.newsmoa.app.util.UrlEncodingUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,6 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import java.util.Set;
+
 
 @Configuration
 @EnableWebSecurity
@@ -19,34 +23,38 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        //뉴스 기사 리스트 요청을 허용하기 위한 카테고리 리스트
+        Set<String> encodedCategories = UrlEncodingUtil.encodeAll(
+                Set.of("경제", "과학", "사회", "세계", "문화")
+        );
+        
         http
-     // 🚨 추가: WebMvcConfigurer에서 설정한 CORS 설정을 적용하도록 활성화
-        		.cors(Customizer.withDefaults())
-                // CSRF 보호 비활성화 (API 서버이므로 세션 기반의 CSRF 보호는 불필요)
-                .csrf(csrf -> csrf.disable())
-                // 세션 관리 정책 설정
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // 필요 시 세션 생성
+                .cors(cors-> cors.disable())                       //cors 전부 차단(현재는 프론트와 백의 origin이 같으므로 cors가 의미없음)
+                .csrf(csrf -> csrf.disable())                      //csrf 미사용(현재 스프링부트 서버는 CORS가 꺼져있고 SameSite 쿠키설정으로 보호받으므로 csrf가 필요없음)
+                .sessionManagement(session -> session //세션 관리 정책 설정
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)         //필요 시에만 세션 생성(인증 등)
                 )
-             // HTTP 요청에 대한 접근 권한 설정
-                .authorizeHttpRequests(authorize -> authorize
-                        // 문자열 패턴으로 변경
-                        .requestMatchers("/api/login", "/api/users", "/api/users/**").permitAll() // /api/login, /api/signup 은 인증 없이 접근 허용
-                        .requestMatchers("/api/**").authenticated() // 나머지 /api/** 경로는 인증 필요
-                        .anyRequest().permitAll() // 그 외 모든 요청은 일단 허용 (필요에 따라 변경)
+                .authorizeHttpRequests(authorize -> authorize //http 요청 설정
+                        .requestMatchers(                                                   //인증없이 접근 가능한 url
+                                "/api/login",                                               //로그인
+                                "/api/users",                                               //회원가입
+                                "/api/users/exists",                                        //id 중복체크
+                                "/api/article/recommand",                                   //추천 기사 목록(메인 페이지에 필요)
+                                "/api/stat/**").permitAll()                                 //랭킹이나 통계자료
+                        .requestMatchers(                                                   //인증없이 접근 가능한 url
+                                new EncodedCategoryMatcher(encodedCategories)                 //카테고리별 기사 리스트(본문부터는 gemini 요청이 생기므로 인증 필요)
+                        ).permitAll()
+                        .requestMatchers("/api/**").authenticated()                       //나머지 /api/** 경로는 인증 필요
+                        .anyRequest().permitAll()                                           //그 외 모든 요청은 허용(현재 구조상 nginx가 차단하므로 실질적으로는 접근불가)
                 )
-                // 기본 로그인 폼 비활성화
-                .formLogin(formLogin -> formLogin.disable())
-                // 기본 HTTP Basic 인증 비활성화
-                .httpBasic(httpBasic -> httpBasic.disable())
-                // 로그아웃 설정
-                .logout(logout -> logout
-                        .logoutUrl("/api/logout")
-                        .logoutSuccessHandler((request, response, authentication) -> {
-                            response.setStatus(200);
+                .formLogin(formLogin -> formLogin.disable()) //기본 로그인 폼 비활성화
+//                .httpBasic(httpBasic -> httpBasic.disable())  //기본 HTTP Basic 인증 비활성화
+                .logout(logout -> logout                        //로그아웃 설정
+                        .logoutUrl("/api/logout")                                         //로그아웃 url 설정
+                        .logoutSuccessHandler((request, response, authentication) -> { //로그아웃 성공시
+                            response.setStatus(200);                                      //200 OK 반환
                         })
                 );
-
         return http.build();
     }
 
