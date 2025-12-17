@@ -21,4 +21,9 @@ public class StatController {
     public List<MentionStatResponse> getRankedPerson(){
         return rankService.getRankTop5();
     }
+    
+    @GetMapping("/party")
+    public List<MentionStatResponse> getPartyStat(){
+        return rankService.getPartyStats();
+    }
 }
