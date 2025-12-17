@@ -1,6 +1,7 @@
 package com.newsmoa.app.service;
 
 import com.newsmoa.app.domain.MentionStats;
+import com.newsmoa.app.dto.MentionStatResponse;
 import com.newsmoa.app.repository.StatsRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,14 +15,14 @@ public class RankService {
         this.statsRepository = statsRepository;
     }
 
-    public List<String> getRankTop5(){
-        List<MentionStats> stats = statsRepository.findTop5();
-//        for(MentionStats stat:stats){
-//            System.out.println("name: "+stat.getPersonName());
-//            System.out.println("party: "+stat.getPartyName());
-//            System.out.println("count: "+stat.getMentionCount());
-//            System.out.println();
-//        }
-        return stats.stream().map(MentionStats::getPersonName).toList();
+    public List<MentionStatResponse> getRankTop5(){
+        List<MentionStatResponse> stats = 
+                statsRepository.findTop5().stream()
+                        .map(ms -> new MentionStatResponse(ms.getPersonName(),ms.getMentionCount()))
+                        .toList();
+                
+        return stats;
     }
+    
+    
 }

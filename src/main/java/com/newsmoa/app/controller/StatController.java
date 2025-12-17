@@ -1,5 +1,6 @@
 package com.newsmoa.app.controller;
 
+import com.newsmoa.app.dto.MentionStatResponse;
 import com.newsmoa.app.service.RankService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +18,7 @@ public class StatController {
     }
 
     @GetMapping("/ranked-person")
-    public List<String> getRankedPerson(){
+    public List<MentionStatResponse> getRankedPerson(){
         return rankService.getRankTop5();
     }
 }
