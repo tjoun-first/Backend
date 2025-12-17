@@ -406,7 +406,7 @@ paths:
   /stat/ranked-person:
     get:
       summary: 오늘 기사 내에 언급된 횟수 상위 5명 랭킹
-      description: 요청한 날짜 당일 기준 언급된 횟수가 가장 많은 5명의 국회위원 이름 반환(언급된 횟수 높은 순)
+      description: 요청한 날짜 당일 기준 언급된 횟수가 가장 많은 5명의 국회위원 이름, 언급수 반환(언급된 횟수 높은 순)
       tags:
         - Stat
       operationId: getRankedPerson
