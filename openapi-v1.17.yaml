@@ -4,7 +4,7 @@ info:
   description: |
     NewsMoa Backend 서비스의 API 명세서입니다.
     기사 조회, 로그인, 마이페이지, 댓글 기능을 제공합니다.
-  version: 1.16.1
+  version: 1.17.0
 servers:
   - url: /api
     description: 기본 API 서버
@@ -418,7 +418,7 @@ paths:
               schema:
                 type: array
                 items:
-                  type: string
+                $ref: '#/components/schemas/MentionStatResponse'
   
   /stat/party:
     get:
@@ -433,7 +433,7 @@ paths:
           content: 
             application/json:
               schema:
-                $ref: '#/components/schemas/partyStat'
+                $ref: '#/components/schemas/MentionStatResponse'
 
 components:
   schemas:
@@ -598,3 +598,15 @@ components:
           type: string
           description: 정당 이름
           example: "무슨무슨당"
+    MentionStatResponse:
+      type: object
+      description: 통계데이터 입니다.
+      properties: 
+        name:
+          type: string
+          description: 사람 또는 정당 이름
+          example: "홍길동"
+        mentionCount:
+          type: integer
+          description: 언급 횟수
+          example: 100
