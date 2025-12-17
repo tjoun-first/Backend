@@ -4,7 +4,7 @@ info:
   description: |
     NewsMoa Backend 서비스의 API 명세서입니다.
     기사 조회, 로그인, 마이페이지, 댓글 기능을 제공합니다.
-  version: 1.16.0
+  version: 1.16.1
 servers:
   - url: /api
     description: 기본 API 서버
