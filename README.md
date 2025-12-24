@@ -1,195 +1,168 @@
-# 📘 NewsMoa Backend API 문서
+# NewsMoA
 
-본 문서는 NewsMoa Backend 서비스의 API 사양을 설명합니다.
-모든 API URL은 `/api` 를 기본 prefix로 사용합니다.
+> NewsMoA는 어려운 뉴스 기사를 AI를 활용해 쉬운 표현으로 재해석하고, 요약과 용어 설명을 제공하는 뉴스 해석 플랫폼입니다.  
+> 이 리포지토리는 NewsMoA 서비스의 **백엔드 서버**를 담당합니다.
 
-------------------------------------------------------------------------
+## 기술 스택
 
-## 🔐 1. 로그인 API
+### Frontend
 
-### **POST /api/login**
+- **React (CRA 기반)**
+    
+- **Axios**
+    
+    - 백엔드 REST API 통신
+        
 
-입력한 ID와 PW로 로그인합니다.
+### Backend
 
-#### 요청 바디 예제
+- **Spring Boot**
+    
+- **Spring Web MVC**
+    
+    - REST API 서버 구현
+        
+- **Spring Data JPA**
+    
+    - MySQL 기반 데이터 접근
+        
+- **Spring Security**
+    
+    - 인증·인가 및 API 접근 제어
+        
+- **Spring Test**
+    
+    - spring-boot-starter-data-jpa-test 포함
+        
+- **SpringDoc OpenAPI**
+    
+    - API 문서 자동화
+        
+- **Gson**
+    
+    - Gemini API 응답(JSON) 파싱
+        
+- **Jsoup**
+    
+    - 네이버 뉴스 기사 크롤링
+        
+- **OpenCSV**
+    
+    - 국회의원 명단 CSV 데이터 처리
+        
 
-``` json
-{
-  "id": "user123",
-  "pw": "mypassword"
-}
+### Database
+
+- **MySQL**
+    
+
+### Infra / Deployment
+
+- **Nginx**
+    
+    - React 빌드 파일 정적 서빙
+        
+    - `/api` 요청에 대한 리버스 프록시
+        
+
+### External / Data Source
+
+- **Naver News**
+    
+    - 뉴스 기사 크롤링 대상
+        
+- **Google Gemini API**
+    
+    - 기사 요약, 재해석 및 단어 설명 기능
+        
+- **대한민국 국회 공개 데이터**
+    
+    - 국회의원 명단 CSV 파일을 프로젝트 리소스로 포함하여 사용
+        
+
+## 아키텍처
+
+React 기반 Frontend는 Nginx를 통해 정적 파일로 서빙되며,  
+`/api` 요청은 Nginx 리버스 프록시를 통해 Backend로 전달됩니다.
+
+Backend(Spring Boot)는 네이버 뉴스와 통신하여 기사를 크롤링하고,  
+Gemini API와 연동해 기사 요약 및 쉬운 표현으로의 재해석을 수행합니다.
+
+가공된 데이터는 MySQL에 저장되며,  
+Frontend는 Backend API를 통해 이를 조회합니다.
+
+## 주요 기능
+
+- **뉴스 기사 수집**
+    
+    - 네이버 뉴스에서 미리 정의된 5가지 카테고리의 기사를 주기적으로 크롤링
+        
+- **AI 기반 기사 요약 및 재해석**
+    
+    - Gemini API를 활용해 기사 내용을 **요약문**과 **재해석문**으로 각각 변환
+        
+    - 요약문은 핵심 정보 위주로 압축된 결과 제공
+        
+    - 재해석문은 전문적이거나 어려운 표현을 쉬운 단어와 문장으로 변환한 결과 제공
+        
+- **단어 선택 기반 설명 기능**
+    
+    - 기사 내 특정 단어를 선택하면 문맥에 맞는 설명을 AI에게 요청
+        
+- **정치 관련 통계 제공**
+    
+    - 당일 수집된 뉴스 데이터를 기반으로 국회의원 언급 수 랭킹 제공
+        
+    - 정당별 언급 횟수 통계 제공
+        
+
+## API 문서
+
+본 프로젝트의 API 문서는 **SpringDoc OpenAPI(Swagger UI)** 를 통해 제공됩니다.
+
+- 로컬 실행 시: `http://localhost:8080/swagger-ui.html`
+    
+- 배포 환경: `https://뉴스모아.온라인.한국/swagger-ui.html`
+    
+
+각 API의 요청/응답 형식과 파라미터는 Swagger UI에서 확인할 수 있습니다.
+
+## 실행 방법
+
+### 실행 환경
+
+- Java 17 이상
+    
+- MySQL 8.x
+    
+
+### 환경 설정
+
+아래 항목들은 `application.yml` 또는 환경 변수로 설정되어야 합니다.
+
+- MySQL 접속 정보
+    
+- Gemini API Key
+    
+
+### 서버 실행
+
+```
+./gradlew bootRun
 ```
 
-#### 응답 예제 (성공)
+서버 실행 후 Swagger UI를 통해 API를 확인할 수 있습니다.
 
-``` json
-true
-```
+## 향후 계획
 
-#### 응답 예제 (실패)
-
-``` json
-false
-```
-
-------------------------------------------------------------------------
-
-## 📰 2. 기사 목록 조회
-
-### **GET /api/article/{category}**
-
-입력한 `category`에 해당하는 기사들의 **title, id** 목록을 반환합니다.
-
-#### Path Parameter
-| 이름       | 타입     | 설명                                   |
-| -------- | ------ | ------------------------------------ |
-| category | String | 한글로 된 기사 카테고리 이름(경제, 과학, 사회, 역사, 환경) |
-
-
-#### 응답 예제
-
-``` json
-[
-  {
-    "id": 12,
-    "category": "politics",
-    "date": "2024-01-02",
-    "url": "https://news.example.com/12",
-    "title": "정부, 새로운 정책 발표",
-    "content": null,
-    "simplified": null,
-    "summary": null
-  },
-  {
-    "id": 44,
-    "category": "politics",
-    "date": "2024-01-03",
-    "url": "https://news.example.com/44",
-    "title": "국회, 긴급 회의 개최",
-    "content": null,
-    "simplified": null,
-    "summary": null
-  }
-]
-```
-
-------------------------------------------------------------------------
-
-## 📝 3. 기사 세부정보 조회
-
-### **GET /api/article/{article_id}**
-
-요청한 `article_id`의 기사 **summary(요약)** 및 **simplified(해석본)**
-정보를 반환합니다.
-
-#### Path Parameter
-
-| 이름         | 타입  | 설명        |
-| ---------- | --- | --------- |
-| article_id | int | 조회할 기사 ID |
-
-
-#### 응답 예제
-
-``` json
-{
-  "id": 12,
-  "category": "politics",
-  "date": "2024-01-02",
-  "url": "https://news.example.com/12",
-  "title": "정부, 새로운 정책 발표",
-  "content": null,
-  "simplified": "정부가 새로운 정책을 발표했습니다. 주요 내용은...",
-  "summary": "정부는 오늘 새로운 정책을 발표했다."
-}
-```
-
-------------------------------------------------------------------------
-
-## 🧾 4. 기사 원문 조회
-
-### **GET /api/article/{article_id}/original
-
-요청한 `article_id`의 기사 **원문(content)** 을 문자열로 반환합니다.
-
-#### Path Parameter
-
-| 이름         | 타입  | 설명        |
-| ---------- | --- | --------- |
-| article_id | int | 조회할 기사 ID |
-
-
-#### 응답 예제
-```text
-정부는 오늘 새로운 정책을 발표했다. 해당 정책은 ...
-```
-
-------------------------------------------------------------------------
-
-## 📌 5. 마이페이지 - 스크랩한 기사 목록
-
-### **GET /api/mypage/scraped**
-
-요청한 유저가 **스크랩한 기사 리스트**를 반환합니다.
-로그인 유저 정보는 세션에서 식별합니다.
-
-#### 응답 예제
-
-``` json
-[
-  {
-    "id": 5,
-    "category": "economy",
-    "date": "2024-01-10",
-    "url": "https://news.example.com/5",
-    "title": "물가 상승률 안정세",
-    "content": null,
-    "simplified": null,
-    "summary": null
-  }
-]
-```
-
-------------------------------------------------------------------------
-
-## 🕒 6. 마이페이지 - 최근 본 기사 목록
-
-### **GET /api/mypage/recent**
-
-요청한 유저가 **최근에 본 기사 리스트**를 반환합니다.
-
-#### 응답 예제
-
-``` json
-[
-  {
-    "id": 31,
-    "category": "sports",
-    "date": "2024-01-08",
-    "url": "https://news.example.com/31",
-    "title": "한국 대표팀, 경기 승리",
-    "content": null,
-    "simplified": null,
-    "summary": null
-  }
-]
-```
-
-------------------------------------------------------------------------
-
-## 📄 Article DTO 구조
-
-모든 기사 관련 API는 아래 Article 구조를 응답으로 사용합니다.
-
-``` json
-{
-  "id": 0,
-  "category": "string",
-  "date": "YYYY-MM-DD",
-  "url": "string",
-  "title": "string",
-  "content": "string (기사 원문)",
-  "simplified": "string (AI 해석본)",
-  "summary": "string (AI 요약본)"
-}
-```
+- **사용자 유형별 개인화**
+    
+    - 현재는 학습 목적의 초등학생을 기준으로 기사 해석 수준을 제공하고 있으나, 향후에는 전문 용어 이해가 어려운 성인, 사회 경험이 적은 고등학생 등 다양한 사용자 유형에 맞춘 개인화된 요약 및 해석 기능을 제공할 계획입니다.
+        
+- **비용 최적화**
+    
+    - AI 응답 결과를 캐싱하여 중복 요청을 줄이고, AI API 사용 비용을 효율적으로 관리할 수 있는 구조로 개선할 계획입니다.
+        
+- **기능 고도화**
+    
+    - 현재 제공 중인 추천 기사 시스템을 개선하고, 검색 엔진을 고도화하여 뉴스 탐색 정확도를 향상시킬 계획입니다.
