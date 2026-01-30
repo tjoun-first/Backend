@@ -3,6 +3,8 @@
 > NewsMoA는 어려운 뉴스 기사를 AI를 활용해 쉬운 표현으로 재해석하고, 요약과 용어 설명을 제공하는 뉴스 해석 플랫폼입니다.  
 > 이 리포지토리는 NewsMoA 서비스의 **백엔드 서버**를 담당합니다.
 
+#### 프론트엔드 리포지토리 https://github.com/skarnddydwls/project
+
 ## 기술 스택
 
 ### Frontend
